@@ -1,0 +1,147 @@
+<!--
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>登录页面</title>
+</head>
+<body>
+<form id="loginForm">
+
+    <div>
+        <label for="username">账号：</label>
+        <input type="text" id="username" name="username">
+    </div>
+
+    <div>
+        <label for="password">密码：</label>
+        <input type="password" id="password" name="password">
+    </div>
+
+
+
+    <button type="submit">提交</button>
+
+
+
+
+</form>
+
+    <button onclick="location.href='http://localhost:81/register.html'">注册</button>
+
+
+<script>
+    document.querySelector('#loginForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止表单的默认提交行为
+
+        const username = document.querySelector('#username').value;
+        const password = document.querySelector('#password').value;
+
+
+        // 检查用户名和密码是否为空
+        if (!username || !password) {
+            alert('账号或密码不能为空！')
+            console.error('账号或密码不能为空！');
+            document.querySelector('#loginForm').reset();
+            return;
+        }
+
+
+        // 发送注册请求
+        fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userName: username,
+                passWord: password
+            })
+        })
+            .then(response => response.json())
+            .then(result => {
+
+                    //输出结果
+
+                    alert(result.msg);
+
+
+            })
+            .catch(error => console.error(error));
+    });
+</script>
+</body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>登录页面</title>
+</head>
+<body>
+<form id="loginForm">
+
+    <div>
+        <label for="username">账号：</label>
+        <input type="text" id="username" name="username">
+    </div>
+
+    <div>
+        <label for="password">密码：</label>
+        <input type="password" id="password" name="password">
+    </div>
+
+    <button type="submit">提交</button>
+
+</form>
+
+<button onclick="location.href='http://localhost:81/register.html'">注册</button>
+
+
+<script>
+    document.querySelector('#loginForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止表单的默认提交行为
+
+        const username = document.querySelector('#username').value;
+        const password = document.querySelector('#password').value;
+
+        // 检查用户名和密码是否为空
+        if (!username || !password) {
+            alert('账号或密码不能为空！');
+            console.error('账号或密码不能为空！');
+            document.querySelector('#loginForm').reset();
+            return;
+        }
+
+        // 发送登录请求
+        fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userName: username,
+                passWord: password
+            })
+        })
+            .then(response => response.json())
+            .then(result => {
+                // 处理返回的结果
+                //alert(result.msg);
+                if (result && result.flag) {
+                    // 登录成功，重定向到 success.html 页面
+                    window.location.href = 'http://localhost:81/success.html';
+                }else{
+                    alert('登录失败');
+
+                    document.querySelector('#loginForm').reset();
+                }
+            })
+            .catch(error => console.error(error));
+    });
+</script>
+</body>
+</html>
+

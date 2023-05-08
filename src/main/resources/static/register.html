@@ -1,0 +1,88 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>注册页面</title>
+</head>
+<body>
+<form id="registerForm">
+
+    <div>
+        <label for="username">账号：</label>
+        <input type="text" id="username" name="username">
+    </div>
+
+    <div>
+        <label for="password">密码：</label>
+        <input type="password" id="password" name="password">
+    </div>
+
+    <div>
+        <label for="confirmPassword">重复密码：</label>
+        <input type="password" id="confirmPassword" name="confirmPassword">
+    </div>
+
+    <button type="submit">提交</button>
+
+</form>
+
+<script>
+    document.querySelector('#registerForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止表单的默认提交行为
+
+        const username = document.querySelector('#username').value;
+        const password = document.querySelector('#password').value;
+        const confirmPassword = document.querySelector('#confirmPassword').value;
+
+        // 检查用户名和密码是否为空
+        if (!username || !password || !confirmPassword) {
+
+
+            alert('账号或密码不能为空！')
+            console.error('账号或密码不能为空！');
+            document.querySelector('#registerForm').reset();
+            return;
+        }
+
+        // 检查两次密码是否一致
+        if (password !== confirmPassword) {
+            console.error('两次密码不一致！');
+            alert('两次密码不一致！');
+            document.querySelector('#registerForm').reset();
+            return;
+        }
+
+        // 发送注册请求
+        fetch('/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userName: username,
+                passWord: password
+            })
+        })
+            .then(response => response.json())
+            .then(result => {
+                // 处理返回的结果
+                if (result && result.flag) {
+                    // 注册成功，弹窗提示并跳转到登录页面
+                    const message = result.msg + '是否跳转到登录页面？';
+                    const shouldGoToLoginPage = confirm(message);
+                    if (shouldGoToLoginPage) {
+                        location.href = 'http://localhost:81/login.html';
+                    }
+                } else {
+                    // 注册失败，弹窗提示并清空表单
+                    alert(result.msg);
+                    document.querySelector('#registerForm').reset();
+                }
+            })
+            .catch(error => console.error(error));
+    });
+</script>
+</body>
+</html>
